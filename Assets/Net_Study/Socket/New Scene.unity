@@ -798,9 +798,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: echo, Assembly-CSharp
-        m_MethodName: connect
+      - m_Target: {fileID: 263779561}
+        m_TargetAssemblyTypeName: AsyncConnect, Assembly-CSharp
+        m_MethodName: StartConnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1705,7 +1705,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 263779561}
         m_TargetAssemblyTypeName: AsyncConnect, Assembly-CSharp
-        m_MethodName: connect
+        m_MethodName: startSend
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
