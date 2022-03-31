@@ -16,7 +16,7 @@ public class AsyncConnect : NetworkBehaviour
     private Socket _socket;
     public TMP_InputField _inputField;
     private byte[] getMessage=new byte[1024];
-    public TMP_Text getMessageText;
+    
 
     public void StartConnect()
     {
@@ -28,11 +28,10 @@ public class AsyncConnect : NetworkBehaviour
     {
         try
         {
-            Socket connectSocket = asyncResult.AsyncState as Socket;
-           Debug.Log(connectSocket);
-           _socket.EndConnect(asyncResult);
+            Socket connectSocket = (Socket)asyncResult.AsyncState;
+            _socket.EndConnect(asyncResult);
             Debug.Log("socket is connnect with async"+connectSocket);
-            startReceive();
+            _socket.BeginReceive(getMessage, 0, 1024, 0, receiveCallBack, null);
            // _socket.BeginReceive(readBuff,0,1024,0,readCallBack,)
         }
         catch (Exception e)
@@ -40,27 +39,28 @@ public class AsyncConnect : NetworkBehaviour
             Debug.Log("connnect fail"+e);
         }
     }
-
-    void startReceive()
-    {
-        _socket.BeginReceive(getMessage, 0, 1024, 0, receiveCallBack, _socket);
-    }
     void receiveCallBack(IAsyncResult asyncResult)
     {
-        Socket connectSocket = asyncResult.AsyncState as Socket;
-        int MessageLen=_socket.EndReceive(asyncResult);
-        string receiveStr=Encoding.Default.GetString(getMessage,0,MessageLen);
-        Debug.Log(receiveStr);
-        getMessageText.text = receiveStr;
-        startReceive();
+        _socket.EndReceive(asyncResult);
+        string receiveStr=Encoding.Default.GetString(getMessage);
+        _socket.BeginReceive(getMessage, 0, 1024, 0, receiveCallBack, null);
     }
 
-    public void startSend()
+    void startSend()
     {
         string sendMessage = _inputField.text;
         byte[] sendBytes = Encoding.Default.GetBytes(sendMessage);
         _socket.Send(sendBytes);
         //_socket.BeginSend(sendBytes, 0, 1024, SocketFlags.None, SendCallBack,null);
     }
-    
+
+    void SendCallBack(IAsyncResult asyncResult)
+    {
+        _socket.EndSend(asyncResult);
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }
